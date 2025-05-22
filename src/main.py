@@ -1,6 +1,45 @@
+import sys
+import os
+
+# Import and apply the OpenAI proxy patch at the very beginning
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.custom_openai_config import patch_openai
+patch_openai()
+
 import streamlit as st
 from PIL import Image
 import pandas as pd
+import shutil
+import base64
+from io import BytesIO
+
+def img_to_bytes(img_path):
+    img = Image.open(img_path)
+    buffered = BytesIO()
+    img.save(buffered, format=img.format)
+    return base64.b64encode(buffered.getvalue()).decode()
+
+# Setup paths
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
+TEMP_DIR = os.path.join(PROJECT_ROOT, "temp_assets")
+
+# Create temp directory if it doesn't exist
+os.makedirs(TEMP_DIR, exist_ok=True)
+
+# Copy assets to temp directory
+for filename in ["logo2.png", "workflow.png", "case_study1.png", "case_study2.png"]:
+    src = os.path.join(ASSETS_DIR, filename)
+    dst = os.path.join(TEMP_DIR, filename)
+    if os.path.exists(src):
+        shutil.copy2(src, dst)
+
+def get_temp_asset_path(filename):
+    return os.path.join(TEMP_DIR, filename)
+
+def get_asset_path(filename):
+    return os.path.join(ASSETS_DIR, filename)
 
 def get_text(key):
     return translations[st.session_state.language][key]
@@ -105,9 +144,12 @@ translations = {
 
 
 def sidebar():  
-# 侧边栏
     with st.sidebar:
-        st.image("assets/logo2.png", use_column_width=True)
+        logo_path = get_asset_path("logo-3.png")
+        st.markdown(
+            f'<img src="data:image/png;base64,{img_to_bytes(logo_path)}" alt="logo" width="100%">',
+            unsafe_allow_html=True
+        )
         st.title("House-Tree-Person Test")
 
         st.write("## Language / 语言")
@@ -128,7 +170,11 @@ def main_page():
     st.write(get_text('abstract_content'))
 
     st.write(f"## {get_text('system_workflow')}")
-    st.image("assets/workflow.png", use_column_width=True)
+    workflow_path = get_asset_path("workflow.png")
+    st.markdown(
+        f'<img src="data:image/png;base64,{img_to_bytes(workflow_path)}" alt="workflow" width="100%">',
+        unsafe_allow_html=True
+    )
 
     st.write(f"## {get_text('evaluation_results')}")
     results_data = {
@@ -148,11 +194,18 @@ def main_page():
     st.write(f"## {get_text('case_study')}")
     col1, col2 = st.columns(2)
     with col1:
-        case1 = Image.open("assets/case_study1.png")
+        case1 = Image.open(get_temp_asset_path("case_study1.png"))
         st.image(case1, use_column_width=True)
     with col2:
-        case2 = Image.open("assets/case_study2.png")
+        case2 = Image.open(get_temp_asset_path("case_study2.png"))
         st.image(case2, use_column_width=True)
+
+    # Cleanup temp directory on exit
+    import atexit
+    def cleanup():
+        if os.path.exists(TEMP_DIR):
+            shutil.rmtree(TEMP_DIR)
+    atexit.register(cleanup)
 
     # 页脚
     st.markdown("---")

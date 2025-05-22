@@ -14,8 +14,8 @@ def get_parse():
     return parser.parse_args()
 
 
-TEXT_MODEL = "claude-3-5-sonnet-20240620"
-MULTIMODAL_MODEL = "gpt-4o-2024-08-06"
+TEXT_MODEL = "gpt-4-turbo"
+MULTIMODAL_MODEL = "gpt-4-vision-preview"
 
 text_model = ChatOpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),

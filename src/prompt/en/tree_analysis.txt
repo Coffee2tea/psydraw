@@ -1,0 +1,5 @@
+DO NOT ADD ANY PSYCHOLOGICAL INTERPRETATION OF THE TREE FEATURES.
+
+Simply return the feature list as provided without any psychological analysis, interpretation, or judgment.
+
+Your response should be identical to the input feature list, maintaining its objective and descriptive nature. 

@@ -3,6 +3,9 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
+import base64
+import os
+from io import BytesIO
 
 # Constants
 CANVAS_WIDTH = 800
@@ -10,8 +13,7 @@ CANVAS_HEIGHT = 600
 
 # Supported languages and their codes
 SUPPORTED_LANGUAGES = {
-    "English": "en",
-    "中文": "zh"
+    "English": "en"
 }
 
 # Language dictionaries
@@ -41,32 +43,6 @@ LANGUAGES = {
             - Return to the main test page to upload and analyze your drawing.
             """,
         "language_label": "Language:"
-    },
-    "zh": {
-        "page_title": "🖌️ 房树人在线画板",
-        "drawing_settings": "🎨 绘图设置",
-        "drawing_mode_label": "绘图模式：",
-        "stroke_width_label": "线条宽度：",
-        "stroke_color_label": "线条颜色：",
-        "bg_color_label": "背景颜色：",
-        "instructions_title": "📋 说明",
-        "instructions": """
-            - 如果您没有纸和笔，可以使用此在线画板。
-            - **重要提示**：如果条件允许，我们更建议您使用纸和笔进行绘画，以获得最佳效果。
-            ### 使用方法：
-            1. 使用侧边栏的工具绘制您的图画。
-            2. 完成后，点击侧边栏的 **下载绘画** 按钮保存您的绘画。
-            3. 在主测试中上传保存的图像进行分析。
-            """,
-        "download_button": "💾 下载绘画",
-        "download_filename": "htp_drawing.png",
-        "download_help": "将您的绘画保存为 PNG 图像。",
-        "reminder_title": "⭕ 提醒",
-        "reminder": """
-            - 绘画完成后，请不要忘记下载您的图像。
-            - 返回主测试页面上传并分析您的绘画。
-            """,
-        "language_label": "语言："
     }
 }
 
@@ -83,6 +59,20 @@ def numpy_to_bytes(array, format="PNG"):
     image.save(byte_io, format=format)
     return byte_io.getvalue()
 
+def img_to_bytes(img_path):
+    img = Image.open(img_path)
+    buffered = BytesIO()
+    img.save(buffered, format=img.format)
+    return base64.b64encode(buffered.getvalue()).decode()
+
+# Setup paths
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(SCRIPT_DIR))
+ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
+
+def get_asset_path(filename):
+    return os.path.join(ASSETS_DIR, filename)
+
 def main():
     # Page Configuration
     st.set_page_config(
@@ -95,22 +85,15 @@ def main():
     if 'language' not in st.session_state:
         st.session_state['language'] = 'English'
     if 'language_code' not in st.session_state:
-        st.session_state['language_code'] = SUPPORTED_LANGUAGES[st.session_state['language']]
+        st.session_state['language_code'] = 'en'
 
     # Sidebar
-    st.sidebar.image("assets/logo2.png", use_column_width=True)
+    sidebar()
     st.sidebar.markdown("## " + get_text("drawing_settings"))
 
-    # Language Selection
-    language = st.sidebar.selectbox(
-        get_text("language_label"),
-        options=list(SUPPORTED_LANGUAGES.keys()),
-        index=list(SUPPORTED_LANGUAGES.keys()).index(st.session_state['language'])
-    )
-    if language != st.session_state['language']:
-        st.session_state['language'] = language
-        st.session_state['language_code'] = SUPPORTED_LANGUAGES[language]
-        st.rerun()
+    # Set language to English
+    st.session_state['language'] = 'English'
+    st.session_state['language_code'] = 'en'
         
     # Drawing Settings
     drawing_mode = st.sidebar.selectbox(
@@ -158,6 +141,14 @@ def main():
     # Reminder
     with st.expander(get_text("reminder_title"), expanded=True):
         st.markdown(get_text("reminder"))
+
+def sidebar():
+    with st.sidebar:
+        logo_path = get_asset_path("logo-3.png")
+        st.markdown(
+            f'<img src="data:image/png;base64,{img_to_bytes(logo_path)}" alt="logo" width="100%">',
+            unsafe_allow_html=True
+        )
 
 if __name__ == "__main__":
     main()

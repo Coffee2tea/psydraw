@@ -1,0 +1,17 @@
+I want you to integrate the following individual analyses into a comprehensive psychological profile based on the House-Tree-Person test.
+
+Here are the analyses to integrate:
+
+## Overall Analysis
+{overall_analysis}
+
+## House Analysis
+{house_analysis}
+
+## Tree Analysis
+{tree_analysis}
+
+## Person Analysis
+{person_analysis}
+
+Based on these individual analyses, provide an integrated psychological profile that identifies consistent themes, contrasts, developmental level, emotional indicators, defenses, cognitive functioning, interpersonal patterns, and areas of concern. 
