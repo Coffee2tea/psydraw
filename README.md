@@ -31,8 +31,8 @@ This repository contains only the code structure of our project due to ethical c
 
 ### Professional Use Only
 - This tool is designed to assist qualified mental health professionals (psychiatrists, counselors, school advisors) in preliminary screenings. Non-professionals must not use it for self/peer assessments. All results require interpretation and validation by qualified professionals.
-- The House-Tree-Person (HTP) test is not a diagnostic tool. Results are for reference only and cannot conclusively evaluate a participant’s psychological state, personality, or capabilities.
-- Participants’ drawings and behaviors reflect subjective perspectives and transient emotional states, not long-term psychological traits. Results must not be used in contexts that may harm participants or influence evaluations, decisions, or selections
+- The House-Tree-Person (HTP) test is not a diagnostic tool. Results are for reference only and cannot conclusively evaluate a participant's psychological state, personality, or capabilities.
+- Participants' drawings and behaviors reflect subjective perspectives and transient emotional states, not long-term psychological traits. Results must not be used in contexts that may harm participants or influence evaluations, decisions, or selections
 - Developers must protect participant confidentiality (personal data, artworks). Content will not be shared without consent, except in cases of force majeure (e.g., natural disasters, legal mandates).
 - By using this tool, developers acknowledge its purpose, methodology, and limitations. Participants retain the right to withdraw at any time without penalty. The team assumes no liability for misuse or subsequent damages.
 
@@ -148,3 +148,29 @@ If you find this work helpful, please cite our paper:
       url={https://arxiv.org/abs/2412.14769}, 
 }
 ```
+
+## 🌐 Streamlit Cloud Deployment
+
+To deploy this application on Streamlit Cloud:
+
+1. Push the repository to GitHub
+2. Visit [Streamlit Cloud](https://streamlit.io/cloud) and sign in
+3. Select "New app" and connect to your GitHub repository
+4. Set the main file path to: `streamlit_app.py`
+5. In the "Advanced settings" section:
+   - Set Python version to 3.11 (recommended)
+   - Add your OpenAI API key to the Secrets section with the key `OPENAI_API_KEY`
+
+```toml
+# Add this to the Secrets section in Streamlit Cloud
+OPENAI_API_KEY = "your-openai-api-key"
+```
+
+6. Deploy the app and wait for the build process to complete
+
+### Troubleshooting Deployment Issues
+
+If you encounter errors during deployment:
+- Check that your API key is correctly set in the Secrets section
+- Verify that all dependencies are correctly specified in `requirements.txt`
+- Examine the build logs for any specific error messages

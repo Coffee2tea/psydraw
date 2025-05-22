@@ -11,8 +11,13 @@ from docx import Document
 from PIL import Image
 
 # Use our custom ChatOpenAI wrapper instead of the original
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 from src.custom_chat_openai import ChatOpenAI
-from model_langchain import HTPModel
+from src.model_langchain import HTPModel
 
 # Add monkey patch to disable proxies in OpenAI
 import openai
