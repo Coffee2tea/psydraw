@@ -322,11 +322,22 @@ def main_content() -> None:
 
     # Display Uploaded Image or Placeholder
     if st.session_state.get('image_display'):
-        st.image(
-            st.session_state['image_display'],
-            caption=get_text("uploaded_drawing"),
-            use_container_width=True
-        )
+        # Check Streamlit version for parameter compatibility
+        import streamlit as st_version_check
+        try:
+            # Try with use_container_width first (newer versions)
+            st.image(
+                st.session_state['image_display'],
+                caption=get_text("uploaded_drawing"),
+                use_container_width=True
+            )
+        except TypeError:
+            # Fall back to use_column_width for older versions
+            st.image(
+                st.session_state['image_display'],
+                caption=get_text("uploaded_drawing"),
+                use_column_width=True
+            )
     else:
         st.info(get_text("upload_prompt"))
 

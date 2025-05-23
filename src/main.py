@@ -195,10 +195,16 @@ def main_page():
     col1, col2 = st.columns(2)
     with col1:
         case1 = Image.open(get_temp_asset_path("case_study1.png"))
-        st.image(case1, use_container_width=True)
+        try:
+            st.image(case1, use_container_width=True)
+        except TypeError:
+            st.image(case1, use_column_width=True)
     with col2:
         case2 = Image.open(get_temp_asset_path("case_study2.png"))
-        st.image(case2, use_container_width=True)
+        try:
+            st.image(case2, use_container_width=True)
+        except TypeError:
+            st.image(case2, use_column_width=True)
 
     # Cleanup temp directory on exit
     import atexit

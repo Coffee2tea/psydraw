@@ -11,34 +11,23 @@ if 'OPENAI_API_KEY' in st.secrets:
 
 # Run the Streamlit app directly
 try:
-    # This is the simplest way to run a Streamlit app directly from the main file
-    st.title("PsyDraw - HTP Test")
-    
-    # Display logo if available
-    try:
-        from PIL import Image
-        logo_path = os.path.join("assets", "logo-3.png")
-        if os.path.exists(logo_path):
-            logo = Image.open(logo_path)
-            st.image(logo, width=300)
-    except Exception as e:
-        st.warning(f"Could not load logo: {str(e)}")
-    
-    # Main page content
-    st.write("Loading the application...")
-    
     # Add the src directory to the path
     src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "src"))
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
     
-    # Define and run the main app file
-    htp_test_path = os.path.join("src", "pages", "HTP Test.py")
+    # Import and run the HTP Test main function
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src", "pages"))
     
-    # Import using exec to avoid module name issues with spaces
-    # This is a workaround for Streamlit Cloud
-    with open(htp_test_path, 'r') as f:
-        exec(f.read())
+    # Import the main function from HTP Test
+    import importlib.util
+    htp_test_path = os.path.join("src", "pages", "HTP Test.py")
+    spec = importlib.util.spec_from_file_location("htp_test", htp_test_path)
+    htp_test_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(htp_test_module)
+    
+    # Call the main function
+    htp_test_module.main()
     
 except Exception as e:
     st.error(f"Error starting the application: {str(e)}")

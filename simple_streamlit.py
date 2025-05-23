@@ -24,7 +24,10 @@ if uploaded_file is not None:
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+        try:
+            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+        except TypeError:
+            st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
     
     # Save the uploaded file temporarily
     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp_file:
