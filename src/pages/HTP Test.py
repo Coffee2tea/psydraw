@@ -325,7 +325,7 @@ def main_content() -> None:
         st.image(
             st.session_state['image_display'],
             caption=get_text("uploaded_drawing"),
-            use_column_width=True
+            use_container_width=True
         )
     else:
         st.info(get_text("upload_prompt"))
