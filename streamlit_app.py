@@ -9,6 +9,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 if 'OPENAI_API_KEY' in st.secrets:
     os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 
+if 'OPENAI_BASE_URL' in st.secrets:
+    os.environ['OPENAI_BASE_URL'] = st.secrets['OPENAI_BASE_URL']
+
 # Run the Streamlit app directly
 try:
     # This is the simplest way to run a Streamlit app directly from the main file
